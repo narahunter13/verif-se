@@ -37,7 +37,11 @@ function doPost(e) {
       fileName
     );
     const file = folder.createFile(blob);
-    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+    try {
+      file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+    } catch (sharingErr) {
+      // Ignore sharing errors - file is still accessible if folder is shared
+    }
     const fileUrl = 'https://drive.google.com/uc?export=view&id=' + file.getId();
     
     // 2. Append Row to Transaksi_Verifikasi
