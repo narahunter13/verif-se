@@ -146,7 +146,7 @@
 </script>
 
 <div class="max-w-2xl mx-auto">
-  <div class="relative z-20 bg-white rounded-sm shadow-lg p-4 sm:p-6 md:p-8 animate-fade-in">
+  <div class="bg-white rounded-sm shadow-lg p-4 sm:p-6 md:p-8 animate-fade-in-up">
     <h1 class="text-lg sm:text-xl md:text-2xl font-bold text-primary-700 mb-5 flex items-center gap-2 sm:gap-3">
       <svg class="w-6 h-6 sm:w-7 sm:h-7 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -171,7 +171,7 @@
     {:else}
       <form onsubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
         <!-- PJ Organik -->
-        <div class="mb-3 animate-fade-in" style="animation-delay: 50ms">
+        <div class="mb-3 animate-fade-in-up" style="animation-delay: 50ms">
           <CustomSelect
             bind:value={formData.pjOrganik}
             options={pjOrganikOptions}
@@ -182,7 +182,7 @@
         </div>
 
         <!-- Nama PPL -->
-        <div class="mb-3 animate-fade-in" style="animation-delay: 100ms">
+        <div class="mb-3 animate-fade-in-up" style="animation-delay: 100ms">
           <CustomSelect
             bind:value={formData.namaPpl}
             options={pplOptions}
@@ -194,7 +194,7 @@
         </div>
 
         <!-- Kecamatan -->
-        <div class="mb-3 animate-fade-in" style="animation-delay: 150ms">
+        <div class="mb-3 animate-fade-in-up" style="animation-delay: 150ms">
           <CustomSelect
             bind:value={formData.kecamatan}
             options={kecamatanOptions}
@@ -206,7 +206,7 @@
         </div>
 
         <!-- Kelurahan -->
-        <div class="mb-3 animate-fade-in" style="animation-delay: 200ms">
+        <div class="mb-3 animate-fade-in-up" style="animation-delay: 200ms">
           <CustomSelect
             bind:value={formData.kelurahan}
             options={kelurahanOptions}
@@ -218,7 +218,7 @@
         </div>
 
         <!-- SLS -->
-        <div class="mb-3 animate-fade-in" style="animation-delay: 250ms">
+        <div class="mb-3 animate-fade-in-up" style="animation-delay: 250ms">
           <CustomSelect
             bind:value={formData.sls}
             options={slsOptions}

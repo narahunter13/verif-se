@@ -28,7 +28,7 @@
   </div>
 
   <!-- Filter -->
-  <div class="relative z-20 bg-white rounded-sm shadow-md p-3 sm:p-4 mb-5">
+  <div class="bg-white rounded-sm shadow-md p-3 sm:p-4 mb-5 animate-fade-in-up" style="animation-delay: 50ms">
     <div class="flex flex-col sm:flex-row flex-wrap gap-3 items-end">
       <div class="w-full sm:flex-1 sm:min-w-[150px]">
         <CustomSelect
