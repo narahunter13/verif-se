@@ -15,19 +15,19 @@
   let responsePage = $state(1);
   const responsePerPage = 10;
 
-  const pjOrganikList = $derived(() => {
+  const pjOrganikList = $derived.by(() => {
     const set = new Set(store.transactionList.map((t) => t.pjOrganik));
     return Array.from(set).sort();
   });
 
-  const pplList = $derived(() => {
+  const pplList = $derived.by(() => {
     let data = store.transactionList;
     if (filterPJ) data = data.filter((t) => t.pjOrganik === filterPJ);
     const set = new Set(data.map((t) => t.namaPpl));
     return Array.from(set).sort();
   });
 
-  const kecamatanList = $derived(() => {
+  const kecamatanList = $derived.by(() => {
     let data = store.transactionList;
     if (filterPJ) data = data.filter((t) => t.pjOrganik === filterPJ);
     if (filterPPL) data = data.filter((t) => t.namaPpl === filterPPL);
@@ -35,7 +35,7 @@
     return Array.from(set).sort();
   });
 
-  const kelurahanList = $derived(() => {
+  const kelurahanList = $derived.by(() => {
     let data = store.transactionList;
     if (filterPJ) data = data.filter((t) => t.pjOrganik === filterPJ);
     if (filterPPL) data = data.filter((t) => t.namaPpl === filterPPL);
@@ -44,7 +44,7 @@
     return Array.from(set).sort();
   });
 
-  const slsList = $derived(() => {
+  const slsList = $derived.by(() => {
     let data = store.transactionList;
     if (filterPJ) data = data.filter((t) => t.pjOrganik === filterPJ);
     if (filterPPL) data = data.filter((t) => t.namaPpl === filterPPL);
@@ -54,7 +54,7 @@
     return Array.from(set).sort();
   });
 
-  const filteredTransactions = $derived(() => {
+  const filteredTransactions = $derived.by(() => {
     let data = store.transactionList;
     if (filterPJ) data = data.filter((t) => t.pjOrganik === filterPJ);
     if (filterPPL) data = data.filter((t) => t.namaPpl === filterPPL);
@@ -64,10 +64,10 @@
     return data.sort((a, b) => b.timestamp.localeCompare(a.timestamp));
   });
 
-  const responseTotalPages = $derived(() => Math.ceil(filteredTransactions().length / responsePerPage));
-  const responsePaginated = $derived(() => {
+  const responseTotalPages = $derived.by(() => Math.ceil(filteredTransactions.length / responsePerPage));
+  const responsePaginated = $derived.by(() => {
     const start = (responsePage - 1) * responsePerPage;
-    return filteredTransactions().slice(start, start + responsePerPage);
+    return filteredTransactions.slice(start, start + responsePerPage);
   });
 
   const resetResponseFilters = () => {
@@ -80,16 +80,16 @@
   };
 
   // Stats for response tab
-  const stats = $derived(() => {
-    const transactions = filteredTransactions();
+  const stats = $derived.by(() => {
+    const transactions = filteredTransactions;
     return {
       totalRealisasi: transactions.length
     };
   });
 
   // Chart data
-  const chartData = $derived(() => {
-    const transactions = filteredTransactions();
+  const chartData = $derived.by(() => {
+    const transactions = filteredTransactions;
     const pplMap = new Map<string, number>();
     for (const t of transactions) {
       pplMap.set(t.namaPpl, (pplMap.get(t.namaPpl) || 0) + 1);
@@ -102,12 +102,12 @@
   // ========== TAB 2: JUMLAH RESPONDEN ==========
   let filterRespondenPJ = $state<string>('');
 
-  const pjOrganikOptions = $derived(() => {
+  const pjOrganikOptions = $derived.by(() => {
     const set = new Set(store.transactionList.map((t) => t.pjOrganik));
     return Array.from(set).sort();
   });
 
-  const respondenCounts = $derived(() => {
+  const respondenCounts = $derived.by(() => {
     let data = store.transactionList;
     if (filterRespondenPJ) data = data.filter((t) => t.pjOrganik === filterRespondenPJ);
 
@@ -138,12 +138,12 @@
   // ========== TAB 3: LAPORAN HARIAN ==========
   let filterHarianPJ = $state<string>('');
 
-  const harianPJOptions = $derived(() => {
+  const harianPJOptions = $derived.by(() => {
     const set = new Set(store.transactionList.map((t) => t.pjOrganik));
     return Array.from(set).sort();
   });
 
-  const dailyReports = $derived(() => {
+  const dailyReports = $derived.by(() => {
     let data = store.transactionList;
     if (filterHarianPJ) data = data.filter((t) => t.pjOrganik === filterHarianPJ);
 
@@ -207,7 +207,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-1 gap-3 sm:gap-4 mb-5">
       <div class="bg-white rounded-sm shadow-md p-4 sm:p-5 border-l-4 border-green-500 animate-fade-in-up" style="animation-delay: 100ms">
         <p class="text-xs sm:text-sm text-gray-500 mb-1">Total Realisasi</p>
-        <p class="text-2xl sm:text-3xl font-bold text-green-600">{stats().totalRealisasi}</p>
+        <p class="text-2xl sm:text-3xl font-bold text-green-600">{stats.totalRealisasi}</p>
       </div>
     </div>
 
@@ -217,7 +217,7 @@
         <div class="w-full sm:flex-1 sm:min-w-[150px]">
           <CustomSelect
             bind:value={filterPJ}
-            options={pjOrganikList()}
+            options={pjOrganikList}
             label="Filter PJ Organik"
             placeholder="Semua PJ Organik"
           />
@@ -225,7 +225,7 @@
         <div class="w-full sm:flex-1 sm:min-w-[150px]">
           <CustomSelect
             bind:value={filterPPL}
-            options={pplList()}
+            options={pplList}
             label="Filter PPL"
             placeholder="Semua PPL"
           />
@@ -233,7 +233,7 @@
         <div class="w-full sm:flex-1 sm:min-w-[150px]">
           <CustomSelect
             bind:value={filterKecamatan}
-            options={kecamatanList()}
+            options={kecamatanList}
             label="Filter Kecamatan"
             placeholder="Semua Kecamatan"
           />
@@ -241,7 +241,7 @@
         <div class="w-full sm:flex-1 sm:min-w-[150px]">
           <CustomSelect
             bind:value={filterKelurahan}
-            options={kelurahanList()}
+            options={kelurahanList}
             label="Filter Kelurahan"
             placeholder="Semua Kelurahan"
             disabled={!filterKecamatan}
@@ -250,7 +250,7 @@
         <div class="w-full sm:flex-1 sm:min-w-[150px]">
           <CustomSelect
             bind:value={filterSls}
-            options={slsList()}
+            options={slsList}
             label="Filter SLS"
             placeholder="Semua SLS"
             disabled={!filterKelurahan}
@@ -266,10 +266,10 @@
     </div>
 
     <!-- Chart -->
-    {#if chartData().length > 0}
+    {#if chartData.length > 0}
       <div class="bg-white rounded-sm shadow-md p-4 sm:p-6 mb-5 animate-fade-in-up" style="animation-delay: 200ms">
         <h2 class="text-sm sm:text-base md:text-lg font-semibold text-gray-800 mb-3">Progress per PPL</h2>
-        <ChartProgress data={chartData()} />
+        <ChartProgress data={chartData} />
       </div>
     {/if}
 
@@ -292,7 +292,7 @@
             </tr>
           </thead>
           <tbody>
-            {#each responsePaginated() as t, i (t.timestamp + t.namaResponden)}
+            {#each responsePaginated as t, i (t.timestamp + t.namaResponden)}
               <tr class="border-b border-gray-100 hover:bg-gray-50 animate-fade-in" style="animation-delay: {i * 40}ms">
                 <td class="py-2 px-2 sm:px-3 text-gray-500">{(responsePage - 1) * responsePerPage + i + 1}</td>
                 <td class="py-2 px-2 sm:px-3 text-gray-700">{t.timestamp}</td>
@@ -311,7 +311,7 @@
                 </td>
               </tr>
             {/each}
-            {#if responsePaginated().length === 0}
+            {#if responsePaginated.length === 0}
               <tr>
                 <td colspan="9" class="py-8 text-center text-gray-500">Tidak ada data</td>
               </tr>
@@ -321,10 +321,10 @@
       </div>
 
       <!-- Pagination -->
-      {#if responseTotalPages() > 1}
+      {#if responseTotalPages > 1}
         <div class="flex items-center justify-between mt-4 pt-3 border-t border-gray-200">
           <p class="text-xs sm:text-sm text-gray-500">
-            Menampilkan {(responsePage - 1) * responsePerPage + 1}-{Math.min(responsePage * responsePerPage, filteredTransactions().length)} dari {filteredTransactions().length}
+            Menampilkan {(responsePage - 1) * responsePerPage + 1}-{Math.min(responsePage * responsePerPage, filteredTransactions.length)} dari {filteredTransactions.length}
           </p>
           <div class="flex gap-1">
             <button
@@ -334,7 +334,7 @@
             >
               Prev
             </button>
-            {#each Array.from({ length: responseTotalPages() }, (_, i) => i + 1) as page}
+            {#each Array.from({ length: responseTotalPages }, (_, i) => i + 1) as page}
               <button
                 onclick={() => responsePage = page}
                 class="px-2 py-1 text-xs sm:text-sm rounded-sm border transition-all duration-200 {responsePage === page ? 'bg-primary-600 text-white border-primary-600' : 'border-gray-300 hover:bg-gray-50'}"
@@ -343,8 +343,8 @@
               </button>
             {/each}
             <button
-              onclick={() => responsePage = Math.min(responseTotalPages(), responsePage + 1)}
-              disabled={responsePage === responseTotalPages()}
+              onclick={() => responsePage = Math.min(responseTotalPages, responsePage + 1)}
+              disabled={responsePage === responseTotalPages}
               class="px-2 py-1 text-xs sm:text-sm rounded-sm border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
             >
               Next
@@ -361,7 +361,7 @@
         <div class="w-full sm:flex-1 sm:min-w-[150px]">
           <CustomSelect
             bind:value={filterRespondenPJ}
-            options={pjOrganikOptions()}
+            options={pjOrganikOptions}
             label="Filter PJ Organik"
             placeholder="Semua PJ Organik"
           />
@@ -386,7 +386,7 @@
             </tr>
           </thead>
           <tbody>
-            {#each respondenCounts() as item, i (item.pjOrganik + item.namaPpl + item.kecamatan + item.kelurahan + item.sls)}
+            {#each respondenCounts as item, i (item.pjOrganik + item.namaPpl + item.kecamatan + item.kelurahan + item.sls)}
               <tr class="border-b border-gray-100 hover:bg-gray-50 animate-fade-in" style="animation-delay: {i * 40}ms">
                 <td class="py-2 px-2 sm:px-3 text-gray-500">{i + 1}</td>
                 <td class="py-2 px-2 sm:px-3 text-gray-700">{item.pjOrganik}</td>
@@ -397,7 +397,7 @@
                 <td class="py-2 px-2 sm:px-3 text-right font-semibold text-primary-600">{item.jumlah}</td>
               </tr>
             {/each}
-            {#if respondenCounts().length === 0}
+            {#if respondenCounts.length === 0}
               <tr>
                 <td colspan="7" class="py-8 text-center text-gray-500">Tidak ada data</td>
               </tr>
@@ -414,7 +414,7 @@
         <div class="w-full sm:flex-1 sm:min-w-[150px]">
           <CustomSelect
             bind:value={filterHarianPJ}
-            options={harianPJOptions()}
+            options={harianPJOptions}
             label="Filter PJ Organik"
             placeholder="Semua PJ Organik"
           />
@@ -437,7 +437,7 @@
             </tr>
           </thead>
           <tbody>
-            {#each dailyReports() as item, i (item.tanggal + item.namaPpl + item.sls)}
+            {#each dailyReports as item, i (item.tanggal + item.namaPpl + item.sls)}
               <tr class="border-b border-gray-100 hover:bg-gray-50 animate-fade-in" style="animation-delay: {i * 40}ms">
                 <td class="py-2 px-2 sm:px-3 text-gray-500">{i + 1}</td>
                 <td class="py-2 px-2 sm:px-3 text-gray-700">{item.tanggal}</td>
@@ -446,7 +446,7 @@
                 <td class="py-2 px-2 sm:px-3 text-right font-semibold text-primary-600">{item.jumlah}</td>
               </tr>
             {/each}
-            {#if dailyReports().length === 0}
+            {#if dailyReports.length === 0}
               <tr>
                 <td colspan="5" class="py-8 text-center text-gray-500">Tidak ada data</td>
               </tr>

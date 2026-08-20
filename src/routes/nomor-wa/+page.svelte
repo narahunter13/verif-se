@@ -4,12 +4,12 @@
 
   let filterPJ = $state<string>('');
 
-  const pjOptions = $derived(() => {
+  const pjOptions = $derived.by(() => {
     const set = new Set(store.nomorWaList.map((n) => n.pjOrganik));
     return Array.from(set).sort();
   });
 
-  const filteredList = $derived(() => {
+  const filteredList = $derived.by(() => {
     let data = store.nomorWaList;
     if (filterPJ) data = data.filter((n) => n.pjOrganik === filterPJ);
     return data.sort((a, b) => a.namaPpl.localeCompare(b.namaPpl));
@@ -33,7 +33,7 @@
       <div class="w-full sm:flex-1 sm:min-w-[150px]">
         <CustomSelect
           bind:value={filterPJ}
-          options={pjOptions()}
+          options={pjOptions}
           label="Filter PJ Organik"
           placeholder="Semua PJ Organik"
         />
@@ -53,7 +53,7 @@
           </tr>
         </thead>
         <tbody>
-          {#each filteredList() as item, i (item.namaPpl + item.nomorWa)}
+          {#each filteredList as item, i (item.namaPpl + item.nomorWa)}
             <tr class="border-b border-gray-100 hover:bg-gray-50 animate-fade-in" style="animation-delay: {i * 40}ms">
               <td class="py-2 px-2 sm:px-3 text-gray-500">{i + 1}</td>
               <td class="py-2 px-2 sm:px-3 text-gray-700">{item.namaPpl}</td>
@@ -75,7 +75,7 @@
               </td>
             </tr>
           {/each}
-          {#if filteredList().length === 0}
+          {#if filteredList.length === 0}
             <tr>
               <td colspan="3" class="py-8 text-center text-gray-500">Tidak ada data</td>
             </tr>
