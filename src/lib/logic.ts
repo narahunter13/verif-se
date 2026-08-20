@@ -86,6 +86,23 @@ export const getTarget = (
   return item?.target || 0;
 };
 
+const sanitizeFileName = (value: string): string => {
+  return value.replace(/[\/\\:*?"<>|]/g, '_').replace(/\s+/g, '_').replace(/_+/g, '_').replace(/^_|_$/g, '');
+};
+
+export const generateFileName = (
+  pjOrganik: string,
+  namaPpl: string,
+  kecamatan: string,
+  kelurahan: string,
+  sls: string,
+  namaResponden: string,
+  extension: string = 'jpg'
+): string => {
+  const parts = [pjOrganik, namaPpl, kecamatan, kelurahan, sls, namaResponden].map(sanitizeFileName);
+  return `${parts.join('_')}.${extension}`;
+};
+
 export const getTargetFromMaster = (
   masterList: MasterItem[],
   pjOrganik: string,

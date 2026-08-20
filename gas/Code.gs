@@ -1,6 +1,16 @@
 const SPREADSHEET_ID = "YOUR_SPREADSHEET_ID";
 const DRIVE_FOLDER_ID = "YOUR_DRIVE_FOLDER_ID";
 
+function sanitizeFileName(value) {
+  return value.replace(/[\/\\:*?"<>|]/g, '_').replace(/\s+/g, '_').replace(/_+/g, '_').replace(/^_|_$/g, '');
+}
+
+function generateFileName(pjOrganik, namaPpl, kecamatan, kelurahan, sls, namaResponden, ext) {
+  ext = ext || 'jpg';
+  var parts = [pjOrganik, namaPpl, kecamatan, kelurahan, sls, namaResponden].map(sanitizeFileName);
+  return parts.join('_') + '.' + ext;
+}
+
 function doGet(e) {
   const action = e.parameter.action;
   
@@ -20,10 +30,11 @@ function doPost(e) {
     // 1. Save Image to Drive
     const folder = DriveApp.getFolderById(DRIVE_FOLDER_ID);
     const contentType = data.fileType || "image/jpeg";
+    const fileName = generateFileName(data.pjOrganik, data.namaPpl, data.kecamatan, data.kelurahan, data.sls, data.namaResponden, 'jpg');
     const blob = Utilities.newBlob(
       Utilities.base64Decode(data.fileBase64), 
       contentType, 
-      `${data.sls}_${data.namaResponden}_${Date.now()}.jpg`
+      fileName
     );
     const file = folder.createFile(blob);
     file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);

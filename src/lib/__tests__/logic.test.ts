@@ -8,7 +8,8 @@ import {
   filterByKelurahan,
   getTarget,
   getTargetFromMaster,
-  getUniqueTargetSum
+  getUniqueTargetSum,
+  generateFileName
 } from '../logic';
 
 const dummyMaster: MasterItem[] = [
@@ -125,5 +126,42 @@ describe('getUniqueTargetSum', () => {
 
   it('should return 0 for empty transactions', () => {
     expect(getUniqueTargetSum(dummyMaster, [])).toBe(0);
+  });
+});
+
+describe('generateFileName', () => {
+  it('should generate filename with underscore format', () => {
+    const result = generateFileName('PJ_A', 'PPL_1', 'KEC_1', 'KEL_1', 'SLS_1A', 'R1');
+    expect(result).toBe('PJ_A_PPL_1_KEC_1_KEL_1_SLS_1A_R1.jpg');
+  });
+
+  it('should default to jpg extension', () => {
+    const result = generateFileName('PJ', 'PPL', 'KEC', 'KEL', 'SLS', 'R');
+    expect(result).toMatch(/\.jpg$/);
+  });
+
+  it('should accept custom extension', () => {
+    const result = generateFileName('PJ', 'PPL', 'KEC', 'KEL', 'SLS', 'R', 'png');
+    expect(result).toMatch(/\.png$/);
+  });
+
+  it('should sanitize special characters', () => {
+    const result = generateFileName('PJ/A', 'PPL:B', 'KEC\\C', 'KEL*D', 'SLS?E', 'R"F');
+    expect(result).toBe('PJ_A_PPL_B_KEC_C_KEL_D_SLS_E_R_F.jpg');
+  });
+
+  it('should collapse multiple underscores', () => {
+    const result = generateFileName('PJ  A', 'PPL   B', 'KEC', 'KEL', 'SLS', 'R');
+    expect(result).toBe('PJ_A_PPL_B_KEC_KEL_SLS_R.jpg');
+  });
+
+  it('should trim leading/trailing underscores', () => {
+    const result = generateFileName('_PJ_', '_PPL_', 'KEC', 'KEL', 'SLS', 'R');
+    expect(result).toBe('PJ_PPL_KEC_KEL_SLS_R.jpg');
+  });
+
+  it('should handle spaces in names', () => {
+    const result = generateFileName('PJ Organik', 'Nama PPL', 'Kec A', 'Kel B', 'SLS C', 'R D');
+    expect(result).toBe('PJ_Organik_Nama_PPL_Kec_A_Kel_B_SLS_C_R_D.jpg');
   });
 });
