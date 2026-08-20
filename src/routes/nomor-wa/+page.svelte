@@ -26,22 +26,31 @@
     <p class="text-xs sm:text-sm text-gray-600 mt-1">Daftar nomor WhatsApp petugas pelaksana lapangan</p>
   </div>
 
-  <!-- Filter -->
-  <div class="bg-white rounded-sm shadow-md p-3 sm:p-4 mb-5 animate-fade-in-up" style="animation-delay: 50ms">
-    <div class="flex flex-col sm:flex-row flex-wrap gap-3 items-end">
-      <div class="w-full sm:flex-1 sm:min-w-[150px]">
-        <CustomSelect
-          bind:value={filterPJ}
-          options={pjOptions}
-          label="Filter PJ Organik"
-          placeholder="Semua PJ Organik"
-        />
+  {#if store.isLoading}
+    <div class="flex items-center justify-center py-12">
+      <div class="animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-4 border-primary-200 border-t-primary-600"></div>
+    </div>
+  {:else if store.error}
+    <div class="bg-red-50 border border-red-200 rounded-sm p-3 sm:p-4 mb-5 animate-fade-in">
+      <p class="text-sm sm:text-base text-red-700">{store.error}</p>
+    </div>
+  {:else}
+    <!-- Filter -->
+    <div class="bg-white rounded-sm shadow-md p-3 sm:p-4 mb-5 animate-fade-in-up" style="animation-delay: 50ms">
+      <div class="flex flex-col sm:flex-row flex-wrap gap-3 items-end">
+        <div class="w-full sm:flex-1 sm:min-w-[150px]">
+          <CustomSelect
+            bind:value={filterPJ}
+            options={pjOptions}
+            label="Filter PJ Organik"
+            placeholder="Semua PJ Organik"
+          />
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- Table -->
-  <div class="bg-white rounded-sm shadow-md p-4 sm:p-5 animate-fade-in-up" style="animation-delay: 100ms">
+    <!-- Table -->
+    <div class="bg-white rounded-sm shadow-md p-4 sm:p-5 animate-fade-in-up" style="animation-delay: 100ms">
     <div class="overflow-x-auto">
       <table class="w-full text-xs sm:text-sm">
         <thead>
@@ -83,4 +92,5 @@
       </table>
     </div>
   </div>
+  {/if}
 </div>

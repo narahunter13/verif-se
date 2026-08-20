@@ -9,7 +9,7 @@ const createStore = () => {
   let isLoading = $state<boolean>(false);
   let error = $state<string | null>(null);
 
-  const uniquePJOrganik = $derived(() => {
+  const uniquePJOrganik = $derived.by(() => {
     const set = new Set(masterList.map((item) => item.pjOrganik));
     return Array.from(set).sort();
   });
