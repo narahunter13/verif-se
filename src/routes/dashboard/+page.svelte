@@ -55,13 +55,13 @@
   });
 
   const filteredTransactions = $derived.by(() => {
-    let data = store.transactionList;
+    let data = [...store.transactionList];
     if (filterPJ) data = data.filter((t) => t.pjOrganik === filterPJ);
     if (filterPPL) data = data.filter((t) => t.namaPpl === filterPPL);
     if (filterKecamatan) data = data.filter((t) => t.kecamatan === filterKecamatan);
     if (filterKelurahan) data = data.filter((t) => t.kelurahan === filterKelurahan);
     if (filterSls) data = data.filter((t) => t.sls === filterSls);
-    return data.sort((a, b) => b.timestamp.localeCompare(a.timestamp));
+    return data.toSorted((a, b) => b.timestamp.localeCompare(a.timestamp));
   });
 
   const responseTotalPages = $derived.by(() => Math.ceil(filteredTransactions.length / responsePerPage));

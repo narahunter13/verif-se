@@ -5,14 +5,13 @@
   let filterPJ = $state<string>('');
 
   const pjOptions = $derived.by(() => {
-    const set = new Set(store.nomorWaList.map((n) => n.pjOrganik));
-    return Array.from(set).sort();
+    return [...new Set(store.nomorWaList.map((n) => n.pjOrganik))].toSorted();
   });
 
   const filteredList = $derived.by(() => {
-    let data = store.nomorWaList;
+    let data = [...store.nomorWaList];
     if (filterPJ) data = data.filter((n) => n.pjOrganik === filterPJ);
-    return data.sort((a, b) => a.namaPpl.localeCompare(b.namaPpl));
+    return data.toSorted((a, b) => a.namaPpl.localeCompare(b.namaPpl));
   });
 </script>
 
