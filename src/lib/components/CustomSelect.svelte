@@ -5,7 +5,8 @@
     label = '',
     placeholder = 'Pilih...',
     disabled = false,
-    required = false
+    required = false,
+    onchange = () => {}
   }: {
     value: string;
     options: string[];
@@ -13,6 +14,7 @@
     placeholder?: string;
     disabled?: boolean;
     required?: boolean;
+    onchange?: () => void;
   } = $props();
 </script>
 
@@ -27,6 +29,7 @@
 <select
   bind:value
   {disabled}
+  {onchange}
   class="w-full px-3 py-2 text-xs sm:text-sm border border-gray-300 rounded-sm bg-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed {value ? 'text-gray-800' : 'text-gray-400'}"
 >
   <option value="" disabled>{placeholder}</option>

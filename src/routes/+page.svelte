@@ -47,13 +47,6 @@
       : []
   );
 
-  $effect(() => {
-    if (formData.pjOrganik) formData.namaPpl = '';
-    if (formData.namaPpl) formData.kecamatan = '';
-    if (formData.kecamatan) formData.kelurahan = '';
-    if (formData.kelurahan) formData.sls = '';
-  });
-
   const handleFileSelect = async (e: Event) => {
     const input = e.target as HTMLInputElement;
     const file = input.files?.[0];
@@ -178,6 +171,7 @@
             label="PJ Organik"
             placeholder="Pilih PJ Organik"
             required
+            onchange={() => { formData.namaPpl = ''; formData.kecamatan = ''; formData.kelurahan = ''; formData.sls = ''; }}
           />
         </div>
 
@@ -190,6 +184,7 @@
             placeholder="Pilih Nama PPL"
             disabled={!formData.pjOrganik}
             required
+            onchange={() => { formData.kecamatan = ''; formData.kelurahan = ''; formData.sls = ''; }}
           />
         </div>
 
@@ -202,6 +197,7 @@
             placeholder="Pilih Kecamatan"
             disabled={!formData.namaPpl}
             required
+            onchange={() => { formData.kelurahan = ''; formData.sls = ''; }}
           />
         </div>
 
@@ -214,6 +210,7 @@
             placeholder="Pilih Kelurahan"
             disabled={!formData.kecamatan}
             required
+            onchange={() => { formData.sls = ''; }}
           />
         </div>
 
