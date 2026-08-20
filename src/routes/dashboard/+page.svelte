@@ -2,6 +2,7 @@
   import { store } from '$lib/state/appState.svelte';
   import ChartProgress from '$lib/components/ChartProgress.svelte';
   import TableBreakdown from '$lib/components/TableBreakdown.svelte';
+  import CustomSelect from '$lib/components/CustomSelect.svelte';
   import type { KecamatanStats, KelurahanStats, SLSStats } from '$lib/types';
 
   let filterPPL = $state<string>('');
@@ -168,81 +169,69 @@
     filterKecamatan = '';
     filterKelurahan = '';
   };
+
+  const kecamatanNames = $derived(() => kecamatanStats().map((k) => k.nama));
+  const kelurahanNames = $derived(() => kelurahanStats().map((k) => k.nama));
 </script>
 
 <div class="max-w-6xl mx-auto">
-  <div class="mb-6">
-    <h1 class="text-2xl md:text-3xl font-bold text-primary-700 flex items-center gap-3">
-      <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <div class="mb-5 animate-fade-in-up">
+    <h1 class="text-lg sm:text-xl md:text-2xl font-bold text-primary-700 flex items-center gap-2 sm:gap-3">
+      <svg class="w-6 h-6 sm:w-7 sm:h-7 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
       </svg>
       Dashboard Monitoring
     </h1>
-    <p class="text-gray-600 mt-2">Pantau progress verifikasi lapangan secara real-time</p>
+    <p class="text-xs sm:text-sm text-gray-600 mt-1">Pantau progress verifikasi lapangan secara real-time</p>
   </div>
 
   <!-- Stats Cards -->
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-    <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-primary-500">
-      <p class="text-sm text-gray-500 mb-1">Total Target</p>
-      <p class="text-3xl font-bold text-primary-600">{stats().totalTarget}</p>
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-5">
+    <div class="bg-white rounded-sm shadow-md p-4 sm:p-5 border-l-4 border-primary-500 animate-fade-in-up" style="animation-delay: 50ms">
+      <p class="text-xs sm:text-sm text-gray-500 mb-1">Total Target</p>
+      <p class="text-2xl sm:text-3xl font-bold text-primary-600">{stats().totalTarget}</p>
     </div>
-    <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-green-500">
-      <p class="text-sm text-gray-500 mb-1">Total Realisasi</p>
-      <p class="text-3xl font-bold text-green-600">{stats().totalRealisasi}</p>
+    <div class="bg-white rounded-sm shadow-md p-4 sm:p-5 border-l-4 border-green-500 animate-fade-in-up" style="animation-delay: 100ms">
+      <p class="text-xs sm:text-sm text-gray-500 mb-1">Total Realisasi</p>
+      <p class="text-2xl sm:text-3xl font-bold text-green-600">{stats().totalRealisasi}</p>
     </div>
-    <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-500">
-      <p class="text-sm text-gray-500 mb-1">Persentase</p>
-      <p class="text-3xl font-bold text-blue-600">{stats().persentase}%</p>
+    <div class="bg-white rounded-sm shadow-md p-4 sm:p-5 border-l-4 border-blue-500 animate-fade-in-up" style="animation-delay: 150ms">
+      <p class="text-xs sm:text-sm text-gray-500 mb-1">Persentase</p>
+      <p class="text-2xl sm:text-3xl font-bold text-blue-600">{stats().persentase}%</p>
     </div>
   </div>
 
   <!-- Filters -->
-  <div class="bg-white rounded-xl shadow-md p-4 mb-6">
-    <div class="flex flex-wrap gap-4 items-end">
+  <div class="bg-white rounded-sm shadow-md p-3 sm:p-4 mb-5 animate-fade-in-up" style="animation-delay: 200ms">
+    <div class="flex flex-col sm:flex-row flex-wrap gap-3 items-end">
       <div class="flex-1 min-w-[150px]">
-        <label for="filterPPL" class="block text-sm font-medium text-gray-700 mb-1">Filter PPL</label>
-        <select
-          id="filterPPL"
+        <CustomSelect
           bind:value={filterPPL}
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-        >
-          <option value="">Semua PPL</option>
-          {#each pplList() as ppl}
-            <option value={ppl}>{ppl}</option>
-          {/each}
-        </select>
+          options={pplList()}
+          label="Filter PPL"
+          placeholder="Semua PPL"
+        />
       </div>
       <div class="flex-1 min-w-[150px]">
-        <label for="filterKec" class="block text-sm font-medium textgray-700 mb-1">Filter Kecamatan</label>
-        <select
-          id="filterKec"
+        <CustomSelect
           bind:value={filterKecamatan}
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-        >
-          <option value="">Semua Kecamatan</option>
-          {#each kecamatanStats() as kec}
-            <option value={kec.nama}>{kec.nama}</option>
-          {/each}
-        </select>
+          options={kecamatanNames()}
+          label="Filter Kecamatan"
+          placeholder="Semua Kecamatan"
+        />
       </div>
       <div class="flex-1 min-w-[150px]">
-        <label for="filterKel" class="block text-sm font-medium text-gray-700 mb-1">Filter Kelurahan</label>
-        <select
-          id="filterKel"
+        <CustomSelect
           bind:value={filterKelurahan}
+          options={kelurahanNames()}
+          label="Filter Kelurahan"
+          placeholder="Semua Kelurahan"
           disabled={!filterKecamatan}
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 disabled:bg-gray-100"
-        >
-          <option value="">Semua Kelurahan</option>
-          {#each kelurahanStats() as kel}
-            <option value={kel.nama}>{kel.nama}</option>
-          {/each}
-        </select>
+        />
       </div>
       <button
         onclick={resetFilters}
-        class="px-4 py-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors"
+        class="px-3 py-2 text-xs sm:text-sm text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-sm transition-all duration-200 active:scale-[0.98] whitespace-nowrap"
       >
         Reset
       </button>
@@ -250,16 +239,16 @@
   </div>
 
   <!-- Chart -->
-  <div class="bg-white rounded-xl shadow-md p-6 mb-6">
-    <h2 class="text-lg font-semibold text-gray-800 mb-4">Progress per PPL</h2>
+  <div class="bg-white rounded-sm shadow-md p-4 sm:p-6 mb-5 animate-fade-in-up" style="animation-delay: 250ms">
+    <h2 class="text-sm sm:text-base md:text-lg font-semibold text-gray-800 mb-3">Progress per PPL</h2>
     <ChartProgress data={chartData()} />
   </div>
 
   <!-- Breakdown Tables -->
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-5">
     <!-- Kecamatan -->
-    <div class="bg-white rounded-xl shadow-md p-6">
-      <h2 class="text-lg font-semibold text-gray-800 mb-4">Breakdown Kecamatan</h2>
+    <div class="bg-white rounded-sm shadow-md p-4 sm:p-5 animate-fade-in-up" style="animation-delay: 300ms">
+      <h2 class="text-sm sm:text-base md:text-lg font-semibold text-gray-800 mb-3">Breakdown Kecamatan</h2>
       <TableBreakdown
         data={kecamatanStats()}
         columns={[
@@ -268,13 +257,13 @@
           { key: 'realisasi', label: 'Realisasi' },
           { key: 'persentase', label: '% Progress' }
         ]}
-        onRowClick={(row) => { filterKecamatan = row.nama; }}
+        onRowClick={(row) => { filterKecamatan = row.nama as string; }}
       />
     </div>
 
     <!-- Kelurahan -->
-    <div class="bg-white rounded-xl shadow-md p-6">
-      <h2 class="text-lg font-semibold text-gray-800 mb-4">Breakdown Kelurahan</h2>
+    <div class="bg-white rounded-sm shadow-md p-4 sm:p-5 animate-fade-in-up" style="animation-delay: 350ms">
+      <h2 class="text-sm sm:text-base md:text-lg font-semibold text-gray-800 mb-3">Breakdown Kelurahan</h2>
       {#if filterKecamatan}
         <TableBreakdown
           data={kelurahanStats()}
@@ -284,17 +273,17 @@
             { key: 'realisasi', label: 'Realisasi' },
             { key: 'persentase', label: '% Progress' }
           ]}
-          onRowClick={(row) => { filterKelurahan = row.nama; }}
+          onRowClick={(row) => { filterKelurahan = row.nama as string; }}
         />
       {:else}
-        <p class="text-gray-500 text-center py-8">Pilih kecamatan untuk melihat detail</p>
+        <p class="text-xs sm:text-sm text-gray-500 text-center py-8">Pilih kecamatan untuk melihat detail</p>
       {/if}
     </div>
 
     <!-- SLS -->
     {#if filterKelurahan}
-      <div class="bg-white rounded-xl shadow-md p-6 lg:col-span-2">
-        <h2 class="text-lg font-semibold text-gray-800 mb-4">Breakdown SLS - {filterKelurahan}</h2>
+      <div class="bg-white rounded-sm shadow-md p-4 sm:p-5 lg:col-span-2 animate-fade-in-up">
+        <h2 class="text-sm sm:text-base md:text-lg font-semibold text-gray-800 mb-3">Breakdown SLS - {filterKelurahan}</h2>
         <TableBreakdown
           data={slsStats()}
           columns={[

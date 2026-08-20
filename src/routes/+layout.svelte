@@ -15,18 +15,18 @@
   <!-- Desktop Sidebar -->
   <aside class="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0 bg-primary-600 text-white">
     <div class="flex items-center h-16 px-6 bg-primary-700">
-      <svg class="w-8 h-8 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg class="w-7 h-7 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
       </svg>
-      <span class="text-xl font-bold">Verif SE</span>
+      <span class="text-base sm:text-lg font-bold">Verif SE</span>
     </div>
-    <nav class="flex-1 px-4 py-6 space-y-2">
+    <nav class="flex-1 px-4 py-6 space-y-1">
       {#each navItems as item}
         <a
           href={item.path}
-          class="flex items-center px-4 py-3 rounded-lg transition-colors {page.url.pathname === item.path ? 'bg-primary-700 text-white' : 'text-primary-100 hover:bg-primary-500'}"
+          class="flex items-center px-3 py-2.5 text-sm rounded-sm transition-all duration-200 {page.url.pathname === item.path ? 'bg-primary-700 text-white shadow-sm' : 'text-primary-100 hover:bg-primary-500'}"
         >
-          <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-5 h-5 mr-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={item.icon} />
           </svg>
           {item.label}
@@ -36,37 +36,46 @@
   </aside>
 
   <!-- Mobile Header -->
-  <header class="md:hidden fixed top-0 left-0 right-0 h-16 bg-primary-600 text-white flex items-center justify-between px-4 z-50">
+  <header class="md:hidden fixed top-0 left-0 right-0 h-14 bg-primary-600 text-white flex items-center justify-between px-4 z-50 shadow-md">
     <div class="flex items-center">
-      <svg class="w-8 h-8 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg class="w-7 h-7 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
       </svg>
-      <span class="text-lg font-bold">Verif SE</span>
+      <span class="text-base font-bold">Verif SE</span>
     </div>
     <button
       onclick={() => isMobileMenuOpen = !isMobileMenuOpen}
-      class="p-2 rounded-lg hover:bg-primary-500"
+      class="p-2 rounded-sm hover:bg-primary-500 transition-colors duration-150"
       aria-label="Toggle menu"
     >
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        {#if isMobileMenuOpen}
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        {:else}
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        {/if}
       </svg>
     </button>
   </header>
 
   <!-- Mobile Menu Overlay -->
   {#if isMobileMenuOpen}
-    <!-- svelte-ignore a11y_click_events_have_key_events a11y_no_static_element_interactions -->
-    <div class="md:hidden fixed inset-0 bg-black/50 z-40" onclick={() => isMobileMenuOpen = false}></div>
-    <div class="md:hidden fixed top-16 right-0 w-64 bg-primary-600 text-white z-50 shadow-lg">
-      <nav class="p-4 space-y-2">
+    <div
+      class="md:hidden fixed inset-0 bg-black/50 z-40 animate-fade-in"
+      role="button"
+      tabindex="-1"
+      onclick={() => isMobileMenuOpen = false}
+      onkeydown={(e) => { if (e.key === 'Escape') isMobileMenuOpen = false; }}
+    ></div>
+    <div class="md:hidden fixed top-14 right-0 w-56 bg-primary-600 text-white z-50 shadow-xl animate-slide-in-right rounded-sm">
+      <nav class="p-3 space-y-1">
         {#each navItems as item}
           <a
             href={item.path}
             onclick={() => isMobileMenuOpen = false}
-            class="flex items-center px-4 py-3 rounded-lg transition-colors {page.url.pathname === item.path ? 'bg-primary-700 text-white' : 'text-primary-100 hover:bg-primary-500'}"
+            class="flex items-center px-3 py-2.5 text-sm rounded-sm transition-all duration-200 {page.url.pathname === item.path ? 'bg-primary-700 text-white' : 'text-primary-100 hover:bg-primary-500'}"
           >
-            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-5 h-5 mr-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={item.icon} />
             </svg>
             {item.label}
@@ -77,8 +86,8 @@
   {/if}
 
   <!-- Main Content -->
-  <main class="md:ml-64 pt-16 md:pt-0 min-h-screen">
-    <div class="p-4 md:p-8">
+  <main class="md:ml-64 pt-14 md:pt-0 min-h-screen">
+    <div class="p-3 sm:p-4 md:p-8">
       {@render children()}
     </div>
   </main>

@@ -21,7 +21,7 @@
 </script>
 
 {#if data.length === 0}
-  <p class="text-gray-500 text-center py-8">Tidak ada data untuk ditampilkan</p>
+  <p class="text-xs sm:text-sm text-gray-500 text-center py-8">Tidak ada data untuk ditampilkan</p>
 {:else}
   <div class="overflow-x-auto">
     <svg viewBox="0 0 {chartWidth + labelWidth + 40} {totalHeight()}" class="w-full max-w-2xl">
@@ -29,7 +29,7 @@
         {@const y = i * (barHeight + gap) + 20}
         {@const targetWidth = (item.target / maxValue()) * (chartWidth - 100)}
         {@const realisasiWidth = (item.realisasi / maxValue()) * (chartWidth - 100)}
-        
+
         <!-- Label -->
         <text
           x={labelWidth - 10}
@@ -39,27 +39,28 @@
         >
           {item.name.length > 15 ? item.name.slice(0, 15) + '...' : item.name}
         </text>
-        
+
         <!-- Target Bar (background) -->
         <rect
           x={labelWidth}
           y={y}
           width={targetWidth}
           height={barHeight}
-          rx="4"
+          rx="2"
           class="fill-primary-100"
         />
-        
-        <!-- Realisasi Bar -->
+
+        <!-- Realisasi Bar with grow animation -->
         <rect
           x={labelWidth}
           y={y}
           width={realisasiWidth}
           height={barHeight}
-          rx="4"
-          class="fill-primary-500"
+          rx="2"
+          class="fill-primary-500 chart-bar-grow"
+          style="animation-delay: {i * 80}ms"
         />
-        
+
         <!-- Percentage Label -->
         <text
           x={labelWidth + Math.max(targetWidth, realisasiWidth) + 8}
@@ -68,7 +69,7 @@
         >
           {item.persentase}%
         </text>
-        
+
         <!-- Value Label -->
         <text
           x={labelWidth + realisasiWidth / 2}
@@ -79,7 +80,7 @@
           {item.realisasi}/{item.target}
         </text>
       {/each}
-      
+
       <!-- Legend -->
       <rect x={labelWidth} y={totalHeight() - 15} width="12" height="12" rx="2" class="fill-primary-100" />
       <text x={labelWidth + 16} y={totalHeight() - 5} class="text-xs fill-gray-600">Target</text>
@@ -88,3 +89,12 @@
     </svg>
   </div>
 {/if}
+
+<style>
+  @keyframes bar-grow {
+    from { width: 0; }
+  }
+  .chart-bar-grow {
+    animation: bar-grow 0.6s ease-out forwards;
+  }
+</style>
