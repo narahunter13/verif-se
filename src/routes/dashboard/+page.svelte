@@ -212,7 +212,7 @@
     </div>
 
     <!-- Filters -->
-    <div class="bg-white rounded-sm shadow-md p-3 sm:p-4 mb-5 animate-fade-in-up" style="animation-delay: 150ms">
+    <div class="bg-white rounded-sm shadow-md p-3 sm:p-4 mb-5 animate-fade-in" style="animation-delay: 150ms">
       <div class="flex flex-col sm:flex-row flex-wrap gap-3 items-end">
         <div class="w-full sm:flex-1 sm:min-w-[150px]">
           <CustomSelect
@@ -356,7 +356,7 @@
 
   {:else if activeTab === 'responden'}
     <!-- Jumlah Responden Filters -->
-    <div class="bg-white rounded-sm shadow-md p-3 sm:p-4 mb-5 animate-fade-in-up" style="animation-delay: 100ms">
+    <div class="bg-white rounded-sm shadow-md p-3 sm:p-4 mb-5 animate-fade-in" style="animation-delay: 100ms">
       <div class="flex flex-col sm:flex-row flex-wrap gap-3 items-end">
         <div class="w-full sm:flex-1 sm:min-w-[150px]">
           <CustomSelect
@@ -409,7 +409,7 @@
 
   {:else if activeTab === 'harian'}
     <!-- Laporan Harian Filters -->
-    <div class="bg-white rounded-sm shadow-md p-3 sm:p-4 mb-5 animate-fade-in-up" style="animation-delay: 100ms">
+    <div class="bg-white rounded-sm shadow-md p-3 sm:p-4 mb-5 animate-fade-in" style="animation-delay: 100ms">
       <div class="flex flex-col sm:flex-row flex-wrap gap-3 items-end">
         <div class="w-full sm:flex-1 sm:min-w-[150px]">
           <CustomSelect

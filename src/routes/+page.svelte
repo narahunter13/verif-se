@@ -171,7 +171,7 @@
     {:else}
       <form onsubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
         <!-- PJ Organik -->
-        <div class="mb-3 animate-fade-in-up" style="animation-delay: 50ms">
+        <div class="mb-3 animate-fade-in" style="animation-delay: 50ms">
           <CustomSelect
             bind:value={formData.pjOrganik}
             options={pjOrganikOptions}
@@ -182,7 +182,7 @@
         </div>
 
         <!-- Nama PPL -->
-        <div class="mb-3 animate-fade-in-up" style="animation-delay: 100ms">
+        <div class="mb-3 animate-fade-in" style="animation-delay: 100ms">
           <CustomSelect
             bind:value={formData.namaPpl}
             options={pplOptions}
@@ -194,7 +194,7 @@
         </div>
 
         <!-- Kecamatan -->
-        <div class="mb-3 animate-fade-in-up" style="animation-delay: 150ms">
+        <div class="mb-3 animate-fade-in" style="animation-delay: 150ms">
           <CustomSelect
             bind:value={formData.kecamatan}
             options={kecamatanOptions}
@@ -206,7 +206,7 @@
         </div>
 
         <!-- Kelurahan -->
-        <div class="mb-3 animate-fade-in-up" style="animation-delay: 200ms">
+        <div class="mb-3 animate-fade-in" style="animation-delay: 200ms">
           <CustomSelect
             bind:value={formData.kelurahan}
             options={kelurahanOptions}
@@ -218,7 +218,7 @@
         </div>
 
         <!-- SLS -->
-        <div class="mb-3 animate-fade-in-up" style="animation-delay: 250ms">
+        <div class="mb-3 animate-fade-in" style="animation-delay: 250ms">
           <CustomSelect
             bind:value={formData.sls}
             options={slsOptions}
