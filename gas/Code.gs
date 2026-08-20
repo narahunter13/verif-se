@@ -38,7 +38,7 @@ function doPost(e) {
     );
     const file = folder.createFile(blob);
     file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
-    const fileUrl = file.getUrl();
+    const fileUrl = 'https://drive.google.com/uc?export=view&id=' + file.getId();
     
     // 2. Append Row to Transaksi_Verifikasi
     const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName("Transaksi_Verifikasi");
@@ -88,9 +88,20 @@ function getInitialData() {
     }
   }
 
+  // Get Nomor sheet data
+  const nomorSheet = ss.getSheetByName("Nomor");
+  let nomorData = [];
+  if (nomorSheet) {
+    nomorData = nomorSheet.getDataRange().getValues();
+    if (nomorData.length > 0) {
+      nomorData.shift(); // Remove header
+    }
+  }
+
   return {
     master: masterData,
-    transactions: transData
+    transactions: transData,
+    nomorWa: nomorData
   };
 }
 
@@ -113,5 +124,12 @@ function setupSheets() {
       "Timestamp", "PJ Organik", "Nama PPL", "Kecamatan", "Kelurahan", 
       "SLS", "Nama Responden", "URL Foto"
     ]);
+  }
+
+  // Create Nomor if not exists
+  let nomorSheet = ss.getSheetByName("Nomor");
+  if (!nomorSheet) {
+    nomorSheet = ss.insertSheet("Nomor");
+    nomorSheet.appendRow(["PJ Organik", "Nama PPL", "Nomor WA"]);
   }
 }

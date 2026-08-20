@@ -97,7 +97,7 @@
 
 <svelte:document onclick={handleOutsideClick} />
 
-<div class="relative" data-custom-select>
+<div class="relative {isOpen ? 'z-50' : ''}" data-custom-select>
   {#if label}
     <!-- svelte-ignore a11y_label_has_associated_control -->
   <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">

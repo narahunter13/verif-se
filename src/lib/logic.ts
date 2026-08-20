@@ -1,4 +1,4 @@
-import type { MasterItem, TransactionItem } from './types';
+import type { MasterItem, TransactionItem, RespondenCountItem, DailyReportItem } from './types';
 
 export const getUniquePJOrganik = (masterList: MasterItem[]): string[] => {
   const set = new Set(masterList.map((item) => item.pjOrganik));
@@ -252,4 +252,63 @@ export const aggregateBySLS = (
       persentase: data.target > 0 ? Math.round((data.realisasi / data.target) * 100) : 0
     }))
     .sort((a, b) => b.persentase - a.persentase);
+};
+
+export const countByResponden = (
+  transactions: TransactionItem[],
+  pjFilter: string = ''
+): RespondenCountItem[] => {
+  let data = transactions;
+  if (pjFilter) data = data.filter((t) => t.pjOrganik === pjFilter);
+
+  const map = new Map<string, RespondenCountItem>();
+  for (const t of data) {
+    const key = `${t.pjOrganik}|${t.namaPpl}|${t.kecamatan}|${t.kelurahan}|${t.sls}`;
+    if (map.has(key)) {
+      map.get(key)!.jumlah++;
+    } else {
+      map.set(key, {
+        pjOrganik: t.pjOrganik,
+        namaPpl: t.namaPpl,
+        kecamatan: t.kecamatan,
+        kelurahan: t.kelurahan,
+        sls: t.sls,
+        jumlah: 1
+      });
+    }
+  }
+  return Array.from(map.values()).sort((a, b) =>
+    a.namaPpl.localeCompare(b.namaPpl) ||
+    a.kecamatan.localeCompare(b.kecamatan) ||
+    a.kelurahan.localeCompare(b.kelurahan) ||
+    a.sls.localeCompare(b.sls)
+  );
+};
+
+export const aggregateDailyReport = (
+  transactions: TransactionItem[],
+  pjFilter: string = ''
+): DailyReportItem[] => {
+  let data = transactions;
+  if (pjFilter) data = data.filter((t) => t.pjOrganik === pjFilter);
+
+  const map = new Map<string, DailyReportItem>();
+  for (const t of data) {
+    const tanggal = t.timestamp.substring(0, 10);
+    const key = `${tanggal}|${t.namaPpl}|${t.sls}`;
+    if (map.has(key)) {
+      map.get(key)!.jumlah++;
+    } else {
+      map.set(key, {
+        tanggal,
+        namaPpl: t.namaPpl,
+        sls: t.sls,
+        jumlah: 1
+      });
+    }
+  }
+  return Array.from(map.values()).sort((a, b) =>
+    b.tanggal.localeCompare(a.tanggal) ||
+    a.namaPpl.localeCompare(b.namaPpl)
+  );
 };

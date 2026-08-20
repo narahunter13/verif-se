@@ -1,10 +1,11 @@
-import type { MasterItem, TransactionItem } from '$lib/types';
+import type { MasterItem, TransactionItem, NomorWaItem } from '$lib/types';
 
 const GAS_WEB_APP_URL = import.meta.env.VITE_GAS_WEB_APP_URL || '';
 
 const createStore = () => {
   let masterList = $state<MasterItem[]>([]);
   let transactionList = $state<TransactionItem[]>([]);
+  let nomorWaList = $state<NomorWaItem[]>([]);
   let isLoading = $state<boolean>(false);
   let error = $state<string | null>(null);
 
@@ -115,6 +116,12 @@ const createStore = () => {
         namaResponden: String(row[6] || ''),
         urlFoto: String(row[7] || '')
       }));
+
+      nomorWaList = (data.nomorWa || []).map((row: unknown[]) => ({
+        pjOrganik: String(row[0] || ''),
+        namaPpl: String(row[1] || ''),
+        nomorWa: String(row[2] || '')
+      }));
     } catch (e) {
       error = e instanceof Error ? e.message : 'Gagal mengambil data';
     } finally {
@@ -159,6 +166,9 @@ const createStore = () => {
     },
     get transactionList() {
       return transactionList;
+    },
+    get nomorWaList() {
+      return nomorWaList;
     },
     get isLoading() {
       return isLoading;

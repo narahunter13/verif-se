@@ -4,7 +4,9 @@ import {
   aggregateByPPL,
   aggregateByKecamatan,
   aggregateByKelurahan,
-  aggregateBySLS
+  aggregateBySLS,
+  countByResponden,
+  aggregateDailyReport
 } from '../logic';
 
 const masterData: MasterItem[] = [
@@ -108,5 +110,66 @@ describe('Dashboard - No Target in TransactionItem', () => {
     const tx = transactions[0];
     expect(tx).not.toHaveProperty('target');
     expect('target' in tx).toBe(false);
+  });
+});
+
+describe('Dashboard - countByResponden', () => {
+  it('should count respondents per PPL/SLS', () => {
+    const result = countByResponden(transactions);
+    expect(result).toHaveLength(4);
+
+    const ppl1Sls1a = result.find(
+      (r) => r.namaPpl === 'PPL_1' && r.sls === 'SLS_1A'
+    );
+    expect(ppl1Sls1a).toBeDefined();
+    expect(ppl1Sls1a!.jumlah).toBe(2);
+    expect(ppl1Sls1a!.kecamatan).toBe('KEC_1');
+  });
+
+  it('should filter by PJ Organik', () => {
+    const result = countByResponden(transactions, 'PJ_A');
+    expect(result).toHaveLength(3);
+    expect(result.every((r) => r.pjOrganik === 'PJ_A')).toBe(true);
+  });
+
+  it('should return empty for non-existent PJ', () => {
+    const result = countByResponden(transactions, 'PJ_X');
+    expect(result).toHaveLength(0);
+  });
+
+  it('should sort by namaPpl then kecamatan', () => {
+    const result = countByResponden(transactions);
+    expect(result[0].namaPpl).toBe('PPL_1');
+  });
+});
+
+describe('Dashboard - aggregateDailyReport', () => {
+  it('should aggregate by date/PPL/SLS', () => {
+    const result = aggregateDailyReport(transactions);
+    expect(result.length).toBeGreaterThan(0);
+
+    const aug1Ppl1 = result.filter(
+      (r) => r.tanggal === '2026-08-01' && r.namaPpl === 'PPL_1'
+    );
+    expect(aug1Ppl1.length).toBeGreaterThan(0);
+  });
+
+  it('should filter by PJ Organik', () => {
+    const result = aggregateDailyReport(transactions, 'PJ_B');
+    expect(result.length).toBe(1);
+    expect(result[0].namaPpl).toBe('PPL_3');
+    expect(result[0].jumlah).toBe(1);
+  });
+
+  it('should sort by date descending', () => {
+    const result = aggregateDailyReport(transactions);
+    if (result.length >= 2) {
+      expect(result[0].tanggal >= result[1].tanggal).toBe(true);
+    }
+  });
+
+  it('should handle empty transactions', () => {
+    const result = aggregateDailyReport([]);
+    expect(result).toEqual([]);
   });
 });

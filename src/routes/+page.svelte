@@ -10,7 +10,6 @@
     kecamatan: '',
     kelurahan: '',
     sls: '',
-    target: 0,
     namaResponden: '',
     file: null,
     filePreview: null
@@ -53,15 +52,6 @@
     if (formData.namaPpl) formData.kecamatan = '';
     if (formData.kecamatan) formData.kelurahan = '';
     if (formData.kelurahan) formData.sls = '';
-    if (formData.sls) {
-      formData.target = store.getTarget(
-        formData.pjOrganik,
-        formData.namaPpl,
-        formData.kecamatan,
-        formData.kelurahan,
-        formData.sls
-      );
-    }
   });
 
   const handleFileSelect = async (e: Event) => {
@@ -91,7 +81,6 @@
       kecamatan: '',
       kelurahan: '',
       sls: '',
-      target: 0,
       namaResponden: '',
       file: null,
       filePreview: null
@@ -149,6 +138,10 @@
     formData.sls &&
     formData.namaResponden &&
     formData.file
+  );
+
+  const isFileUploadReady = $derived(
+    formData.sls && formData.namaResponden
   );
 </script>
 
@@ -236,20 +229,6 @@
           />
         </div>
 
-        <!-- Target -->
-        <div class="mb-3 animate-fade-in-up" style="animation-delay: 300ms">
-          <label for="target" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
-            Target
-          </label>
-          <input
-            type="number"
-            id="target"
-            bind:value={formData.target}
-            readonly
-            class="w-full px-3 py-2 text-xs sm:text-sm border border-gray-200 rounded-sm bg-gray-50 text-gray-600"
-          />
-        </div>
-
         <!-- Nama Responden -->
         <div class="mb-5 animate-fade-in-up" style="animation-delay: 350ms">
           <label for="namaResponden" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
@@ -269,56 +248,66 @@
           <label for="fileInput" class="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
             Foto Verifikasi <span class="text-red-500">*</span>
           </label>
-          <div class="border-2 border-dashed border-gray-300 rounded-sm p-4 sm:p-6 text-center hover:border-primary-400 transition-all duration-200 hover:bg-primary-50/30">
-            {#if formData.filePreview}
-              <div class="mb-3 animate-scale-in">
-                <img
-                  src={formData.filePreview}
-                  alt="Preview"
-                  class="max-h-40 sm:max-h-48 mx-auto rounded-sm shadow-md"
+          {#if !isFileUploadReady}
+            <div class="border-2 border-dashed border-gray-200 rounded-sm p-4 sm:p-6 text-center bg-gray-50">
+              <svg class="w-10 h-10 sm:w-12 sm:h-12 mx-auto text-gray-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+              <p class="text-sm text-gray-400">Lengkapi data wilayah dan nama responden terlebih dahulu</p>
+            </div>
+          {:else}
+            <div class="border-2 border-dashed border-gray-300 rounded-sm p-4 sm:p-6 text-center hover:border-primary-400 transition-all duration-200 hover:bg-primary-50/30">
+              {#if formData.filePreview}
+                <div class="mb-3 animate-scale-in">
+                  <img
+                    src={formData.filePreview}
+                    alt="Preview"
+                    class="max-h-40 sm:max-h-48 mx-auto rounded-sm shadow-md"
+                  />
+                </div>
+                {#if compressedInfo}
+                  <p class="text-xs sm:text-sm text-gray-500 mb-2 animate-fade-in">
+                    Original: {formatFileSize(compressedInfo.original)} &rarr;
+                    Kompresi: {formatFileSize(compressedInfo.compressed)}
+                    ({((1 - compressedInfo.compressed / compressedInfo.original) * 100).toFixed(0)}% lebih kecil)
+                  </p>
+                {/if}
+                <button
+                  type="button"
+                  onclick={() => {
+                    formData.file = null;
+                    formData.filePreview = null;
+                    compressedInfo = null;
+                  }}
+                  class="text-xs sm:text-sm text-red-600 hover:text-red-800 underline transition-colors"
+                >
+                  Hapus foto
+                </button>
+              {:else}
+                <input
+                  type="file"
+                  accept="image/*"
+                  onchange={handleFileSelect}
+                  class="hidden"
+                  id="fileInput"
+                  disabled={isCompressing}
                 />
-              </div>
-              {#if compressedInfo}
-                <p class="text-xs sm:text-sm text-gray-500 mb-2 animate-fade-in">
-                  Original: {formatFileSize(compressedInfo.original)} &rarr;
-                  Kompresi: {formatFileSize(compressedInfo.compressed)}
-                  ({((1 - compressedInfo.compressed / compressedInfo.original) * 100).toFixed(0)}% lebih kecil)
-                </p>
+                <label for="fileInput" class="cursor-pointer block">
+                  <svg class="w-10 h-10 sm:w-12 sm:h-12 mx-auto text-gray-400 mb-2 transition-transform duration-200 hover:scale-105" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  <p class="text-sm text-gray-600">Klik untuk memilih foto</p>
+                  <p class="text-xs text-gray-400 mt-1">PNG, JPG, JPEG (Maks 10MB)</p>
+                </label>
               {/if}
-              <button
-                type="button"
-                onclick={() => {
-                  formData.file = null;
-                  formData.filePreview = null;
-                  compressedInfo = null;
-                }}
-                class="text-xs sm:text-sm text-red-600 hover:text-red-800 underline transition-colors"
-              >
-                Hapus foto
-              </button>
-            {:else}
-              <input
-                type="file"
-                accept="image/*"
-                onchange={handleFileSelect}
-                class="hidden"
-                id="fileInput"
-              />
-              <label for="fileInput" class="cursor-pointer block">
-                <svg class="w-10 h-10 sm:w-12 sm:h-12 mx-auto text-gray-400 mb-2 transition-transform duration-200 hover:scale-105" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-                <p class="text-sm text-gray-600">Klik untuk memilih foto</p>
-                <p class="text-xs text-gray-400 mt-1">PNG, JPG, JPEG (Maks 10MB)</p>
-              </label>
-            {/if}
-            {#if isCompressing}
-              <div class="mt-4 animate-fade-in">
-                <div class="animate-spin rounded-full h-7 w-7 sm:h-8 sm:w-8 border-4 border-primary-200 border-t-primary-600 mx-auto"></div>
-                <p class="text-xs sm:text-sm text-gray-500 mt-2">Mengkompresi gambar...</p>
-              </div>
-            {/if}
-          </div>
+              {#if isCompressing}
+                <div class="mt-4 animate-fade-in">
+                  <div class="animate-spin rounded-full h-7 w-7 sm:h-8 sm:w-8 border-4 border-primary-200 border-t-primary-600 mx-auto"></div>
+                  <p class="text-xs sm:text-sm text-gray-500 mt-2">Mengkompresi gambar...</p>
+                </div>
+              {/if}
+            </div>
+          {/if}
         </div>
 
         <!-- Submit Button -->

@@ -24,7 +24,6 @@ export interface FormData {
   kecamatan: string;
   kelurahan: string;
   sls: string;
-  target: number;
   namaResponden: string;
   file: File | null;
   filePreview: string | null;
@@ -57,4 +56,26 @@ export interface SLSStats {
   target: number;
   realisasi: number;
   persentase: number;
+}
+
+export interface NomorWaItem {
+  pjOrganik: string;
+  namaPpl: string;
+  nomorWa: string;
+}
+
+export interface RespondenCountItem {
+  pjOrganik: string;
+  namaPpl: string;
+  kecamatan: string;
+  kelurahan: string;
+  sls: string;
+  jumlah: number;
+}
+
+export interface DailyReportItem {
+  tanggal: string;
+  namaPpl: string;
+  sls: string;
+  jumlah: number;
 }
