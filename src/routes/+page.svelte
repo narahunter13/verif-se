@@ -229,7 +229,7 @@
         <!-- Nama Responden -->
         <div class="mb-5 animate-fade-in-up" style="animation-delay: 350ms">
           <label for="namaResponden" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
-            Nama Responden <span class="text-red-500">*</span>
+            Nama Prelist <span class="text-red-500">*</span>
           </label>
           <input
             type="text"
