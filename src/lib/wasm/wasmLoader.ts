@@ -63,7 +63,12 @@ const fallbackCompress = (
 
           blob.arrayBuffer().then((buffer) => {
             const data = new Uint8Array(buffer);
-            const base64 = btoa(String.fromCharCode(...data));
+            let binary = '';
+            const chunkSize = 8192;
+            for (let i = 0; i < data.length; i += chunkSize) {
+              binary += String.fromCharCode(...data.subarray(i, i + chunkSize));
+            }
+            const base64 = btoa(binary);
             resolve({ data, base64 });
           });
         },
