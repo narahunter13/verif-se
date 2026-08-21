@@ -177,7 +177,7 @@ const createStore = () => {
       return error;
     },
     get uniquePJOrganik() {
-      return uniquePJOrganik();
+      return uniquePJOrganik;
     },
     filterByPJOrganik,
     filterByPPL,
